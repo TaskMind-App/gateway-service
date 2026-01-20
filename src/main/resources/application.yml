@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: task-service-route
+          uri: lb://task-service
+          predicates:
+            - Path=/api/tasks/**
