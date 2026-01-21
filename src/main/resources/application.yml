@@ -1,8 +1,24 @@
+server:
+  port: 8080
+
 spring:
+  application:
+    name: gateway-service
   cloud:
     gateway:
-      routes:
-        - id: task-service-route
-          uri: lb://task-service
-          predicates:
-            - Path=/api/tasks/**
+      mvc:
+        routes:
+          - id: task-service-route
+            uri: lb://task-service
+            predicates:
+              - Path=/api/tasks, /api/tasks/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.web: DEBUG
