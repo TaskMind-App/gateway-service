@@ -12,6 +12,10 @@ spring:
             uri: lb://task-service
             predicates:
               - Path=/api/tasks, /api/tasks/**
+          - id: user-service-route
+            uri: lb://user-service
+            predicates:
+              - Path=/api/users, /api/users/**
 
 eureka:
   client:
