@@ -43,6 +43,10 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                 try {
                     jwtUtil.validateToken(authHeader);
+                    Long userId = jwtUtil.extractUserId(authHeader);
+                    exchange.getRequest().mutate()
+                            .header("X-User-Id", String.valueOf(userId))
+                            .build();
                 } catch (Exception e) {
                     return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Token"));
                 }
