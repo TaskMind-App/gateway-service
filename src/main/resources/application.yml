@@ -6,16 +6,25 @@ spring:
     name: gateway-service
   cloud:
     gateway:
-      mvc:
-        routes:
-          - id: task-service-route
-            uri: lb://task-service
-            predicates:
-              - Path=/api/tasks, /api/tasks/**
-          - id: user-service-route
-            uri: lb://user-service
-            predicates:
-              - Path=/api/users, /api/users/**
+      routes:
+        - id: task-service-route
+          uri: lb://task-service
+          predicates:
+            - Path=/api/tasks, /api/tasks/**
+          filters:
+            - AuthenticationFilter
+        - id: user-service-route
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users, /api/users/**
+          filters:
+            - AuthenticationFilter
+application:
+  security:
+    jwt:
+      secret-key: ${TOKEN_SECRET_KEY}
+      expiration-time: ${TOKEN_EXPIRATION_TIME}
+
 
 eureka:
   client:
