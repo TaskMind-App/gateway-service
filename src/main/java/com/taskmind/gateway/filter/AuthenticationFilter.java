@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
@@ -31,6 +33,15 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
+
+            String correlationId = exchange.getRequest().getHeaders().getFirst("X-Correlation-Id");
+            if (correlationId == null || correlationId.isEmpty()) {
+                correlationId = UUID.randomUUID().toString();
+            }
+            exchange.getRequest().mutate()
+                    .header("X-Correlation-Id", correlationId)
+                    .build();
+
             if (validator.isSecured.test(exchange.getRequest())) {
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Token"));
