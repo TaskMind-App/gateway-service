@@ -19,6 +19,10 @@ spring:
             - Path=/api/users, /api/users/**
           filters:
             - AuthenticationFilter
+        - id: ai-service
+          uri: http://ai-service:8000
+          predicates:
+            - Path=/api/ai/**
 application:
   security:
     jwt:
