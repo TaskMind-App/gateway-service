@@ -23,6 +23,8 @@ spring:
           uri: http://ai-service:8000
           predicates:
             - Path=/api/ai/**
+          filters:
+            - AuthenticationFilter
 application:
   security:
     jwt:
